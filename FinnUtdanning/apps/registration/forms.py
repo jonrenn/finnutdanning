@@ -5,12 +5,13 @@ from .models import Student
 
 class StudentCreationForm(UserCreationForm):
     class Meta:
+        email = forms.EmailField(required=True, help_text="Noe")
         model = Student
         fields = (
             'username',
+            'email',
             'first_name',
             'last_name',
-            'email',
         )
 
 class StudentChangeForm(UserChangeForm):

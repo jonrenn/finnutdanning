@@ -3,15 +3,15 @@
 
 {% block text %}
     </br>
-    <h1>Logg inn</h1>
+    <h1 style="font-size: 40px" >Logg inn</h1>
     </br>
-    <form method="post">
+    <form method="post" style="font-size: 15px">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" style="font-size: 14px;">Login</button>
+        <button type="submit" style="font-size: 15px;">Logg inn</button>
     </form>
     </br>
-    <a href="{% url 'register' %}" style="font-size: 14px">Registrer bruker</a>
+    <a href="{% url 'register' %}" style="font-size: 15px">Registrer bruker</a>
     </br></br>
 
 {% endblock %}

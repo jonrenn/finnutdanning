@@ -2,13 +2,12 @@
 
 {% block text %}
     </br>
-    <h1>Registrer deg</h1>
-    </br></br>
-    <form method="post" style="font-size: 14px">
+    <h1 style="font-size: 40px">Registrer deg</h1>
+    </br>
+    <form method="post" style="font-size: 15px">
         {% csrf_token %}
         {{ form.as_p }}
-        </br>
-        <button type="submit">Registrer</button>
+        <button type="submit">Registrer deg</button>
         </br></br>
     </form>
 {% endblock %}
