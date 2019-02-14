@@ -1,0 +1,29 @@
+{% extends 'registration/profile.html' %}
+{% load widget_tweaks %}
+{% block info %}
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+         <!-- Itererer over alle fields i user form -->
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field|add_class:"form-control" }}
+            </div>
+        {% endfor %}
+        <div class="infobutton" data-toggle="modal" data-target="#confirm-delete">
+            <span id="Overly" class="glyphicon glyphicon-info-sign" />
+        </div>
+        <button type="submit">Lagre</button>
+    </form>
+
+
+    <style>
+        .infobutton {
+            float: right;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+

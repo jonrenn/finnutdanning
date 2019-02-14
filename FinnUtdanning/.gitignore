@@ -1,0 +1,30 @@
+# Jetbrains stuff
+.idea/
+*.iws
+*.iml
+
+# Python stuff
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Django stuff:
+*.log
+local_settings.py
+.gitignore.local
+
+# pyenv
+.python-version
+
+# virtualenv
+venv/
+ENV/
+hybenv/
+
+# Database
+db.sqlite3

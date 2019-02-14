@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ student.username }}{% endblock title %}
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/profile.css" %}">
+{% endblock link %}
+
+{% block text %}
+    <div style="padding: 20px 30px 60px">
+        <div class="row">
+            <div class="col-xs-12">
+                <h5 class="top-text">
+                    <span><a href="{% url 'profile' hybrid %}">{{ hybrid.username }}</a></span>
+                    {% if user == hybrid %}
+                        <span style="float: right"><a href="{% url 'edit_profile' hybrid %}">Endre Bruker</a></span>
+                    {% endif %}
+                </h5>
+            </div>
+            <div class="col-md-6 col-xs-12 pull-left space-above">
+                {% block info %}
+                    <h1>{{ student.first_name }} {{ student.middle_name }} {{ student.last_name }}</h1>
+                    <br>
+                    <div style="overflow-x: auto">
+                        <table class="info-table">
+                            {% if student.email %}
+                                <tr>
+                                    <td>Email</td>
+                                    <td>{{ student.email }}</td>
+                                </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                    <br>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

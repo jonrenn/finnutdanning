@@ -1,0 +1,89 @@
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="{% url 'home' %}" style="font-size: 25px">FinnUtdanning</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#" style="margin-right: 5px;">Om FinnUtdanning</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Noe</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav my-2 my-lg-0">
+            <li class="nav-item dropdown">
+                {% if user.is_authenticated %}
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                                <span style="padding-right: .5em">{% firstof user.username  %}</span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'profile' user %}">Profil</a>
+                        {% if user.is_staff %}
+                            <a class="dropdown-item" href="{% url 'admin:index' %}">Administrering</a>
+                        {% endif %}
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logg ut</a>
+                    </div>
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}"  data-toggle="modal" data-target="#login-modal"
+                       role="button" aria-haspopup="true" aria-expanded="false">
+                        <span style="padding-right: .5em">Logg inn</span>
+                    </a>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+</nav>
+
+{# This is the box that appears when user clicks on log in. #}
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Logg inn</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="loginmodal-container">
+
+                    <form class="navbar-form" method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <input name="next" value="{{ request.path }}" hidden>
+                        <div class="form-group">
+                            <input class="form-control" autofocus="" id="id_username"  name="username" style="width: 100%"
+                                   required="" placeholder="Brukernavn" type="text">
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group">
+                            <input id="id_password" name="password" required="" type="password"
+                                   class="form-control" placeholder="Passord">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary form-control" type="submit"
+                                    style="width: 100%; margin: .25em 0;">Logg inn
+                            </button>
+                            <a href="{% url 'register' %}" class="btn btn-default" style="width: 100%">Registrer/Gjenopprett bruker</a>
+                        </div>
+                    </form>
+                    </div>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/login.css" %}">
+{% endblock %}
