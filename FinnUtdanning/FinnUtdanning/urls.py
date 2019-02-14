@@ -18,11 +18,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 
-from apps.api.views import index
+from apps.api.views import frontpage, aboutpage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    url(r'^$', index, name='home'),
-    url(r'^student/', include('apps.registration.urls'), name='accounts'),
+    url(r'^$', frontpage, name='home'),
+    url(r'^bruker/', include('apps.registration.urls'), name='accounts'),
+    url(r'^om/$', aboutpage, name='about'),
 ]

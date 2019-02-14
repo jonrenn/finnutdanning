@@ -1,5 +1,8 @@
 from django.shortcuts import render
 
 
-def index(request):
+def frontpage(request):
     return render(request, "frontpage.html")
+
+def aboutpage(request):
+    return render(request, "about.html")

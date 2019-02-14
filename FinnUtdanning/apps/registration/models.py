@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
 
 
 class CaseInsensitiveUserManager(UserManager):
@@ -31,13 +30,3 @@ class Student(AbstractUser):
 
     def get_absolute_url(self):
         return reverse('profile', kwargs={'slug': self.username})
-
-class RecoveryMail(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(default=timezone.now)
-
-    class Meta:
-        ordering = ['-timestamp']
-
-    def __str__(self):
-        return "{}_{}".format(self.student, self.timestamp)
