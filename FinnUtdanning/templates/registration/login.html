@@ -2,14 +2,16 @@
 {% load widget_tweaks %}
 
 {% block text %}
-    <h1>Registrer deg</h1>
+    </br>
+    <h1>Logg inn</h1>
     </br>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Login</button>
+        <button type="submit" style="font-size: 14px;">Login</button>
     </form>
-
-    <a href="{% url 'register' %}" class="">Registrer/Gjenopprett bruker</a>
+    </br>
+    <a href="{% url 'register' %}" style="font-size: 14px">Registrer bruker</a>
+    </br></br>
 
 {% endblock %}
