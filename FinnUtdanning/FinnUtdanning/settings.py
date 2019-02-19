@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'apps.api',
     'apps.registration',
+    'apps.messages'
 ]
 
 MIDDLEWARE = [
