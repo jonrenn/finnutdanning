@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'apps.api',
     'apps.registration',
+    'apps.studyadvisor',
 ]
 
 MIDDLEWARE = [
@@ -135,4 +136,3 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_FOLDER = os.path.join(BASE_DIR, "static")
-
