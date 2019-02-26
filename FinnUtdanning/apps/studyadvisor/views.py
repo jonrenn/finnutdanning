@@ -8,7 +8,10 @@ def frontpage(request):
         form = StudieforslagForm(request.POST)
         if form.is_valid():
             sf = form.save(commit=False)
-            sf.student = request.user
+            if request.user.is_authenticated:
+                sf.student = request.user
+            else:
+                sf.student = None
             sf = form.save()
             for int in sf.interesser.all():
                 i = Interesser.objects.get(pk=int.pk)

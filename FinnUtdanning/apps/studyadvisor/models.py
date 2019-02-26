@@ -19,7 +19,7 @@ class Studier(models.Model):
         verbose_name_plural = "Studier"
 
 class Studieforslag(models.Model):
-    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     studier = models.ManyToManyField(Studier, through='RelevantStudie')
     interesser = models.ManyToManyField(Interesser)
 
