@@ -19,12 +19,19 @@ from django.contrib import admin
 from django.urls import path
 
 from apps.api.views import aboutpage
-from apps.studyadvisor.views import frontpage
+from apps.studyadvisor.views import frontpage, nyInteresse, nyttStudie, endre, endreInteresse, endreStudie, slettInteresse, slettStudie
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', frontpage, name='home'),
     url(r'^studieforslag/$', frontpage, name='studieforslag'),
+    url(r'^nyInteresse/$', nyInteresse, name='nyInteresse'),
+    url(r'^nyttStudie/$', nyttStudie, name='nyttStudie'),
+    url(r'^endre/$', endre, name='endre'),
+    url(r'^endre/interesse/(?P<id>\d+)/$', endreInteresse, name='endreInteresse'),
+    url(r'^endre/studie/(?P<id>\d+)/$', endreStudie, name='endreStudie'),
+    url(r'^endre/interesse/slett/(?P<id>\d+)/$', slettInteresse, name='slettInteresse'),
+    url(r'^endre/studie/slett/(?P<id>\d+)/$', slettStudie, name='slettStudie'),
     url(r'^bruker/', include('apps.registration.urls'), name='accounts'),
     url(r'^om/$', aboutpage, name='about'),
 ]
