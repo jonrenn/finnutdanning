@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Forside{% endblock %}
+{% block text %}
+    <article>
+        <h1>Endre interesser/studier</h1>
+        <br>
+        <div class="panel panel-primary">
+            <div class="panel-heading">Interesser</div>
+
+            <div class="list-group" style="max-height:250px; overflow-y: scroll;">
+                {% for i in interesser %}
+                    <a href="interesse/{{i.id}}" class="list-group-item">{{i.navn}}<span style="font-weight: bold; float:right;">[ID{{i.id}}]</span></a>
+                {% endfor %}
+            </div>
+        </div>
+        <br>
+        <div class="panel panel-primary">
+            <div class="panel-heading">Studier</div>
+
+            <div class="list-group" style="max-height:250px; overflow-y: scroll;">
+                {% for s in studier %}
+                    <a href="studie/{{s.id}}" class="list-group-item">{{s.navn}}<span style="font-weight: bold; float:right;">[ID{{s.id}}]</span></a>
+                {% endfor %}
+            </div>
+        </div>
+    </article>
+{% endblock %}
+{% block script %}
+{% endblock %}
