@@ -1,0 +1,31 @@
+{% extends 'base_clean.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row space-below">
+            <div class="col-xs-12 space-above">
+                <h1>Tidligere Søk</h1>
+                <br><br>
+                {% for studieforslag, relevante_studier in searches reversed%}
+                    <div class="white-box center-block" id="text-box" style="background: white; margin-bottom:20px; width:600px; border-radius: 10px; font-size: 14px; text-align: center">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h3>Interesser søkt</h3>
+                                {% for interesse in studieforslag.interesser.all%}
+                                    {{ interesse }}
+                                    <br>
+                                {% endfor %}
+                            </div>
+                            <div class="col-xs-6">
+                                <h3>Studier foreslått</h3>
+                                {% for relevantstudier in relevante_studier %}
+                                    <a>{{ relevantstudier.studie }} med {{ relevantstudier.relevans }} interesse{% if relevantstudier.relevans > 1%}r{% endif %} som matchet</a>
+                                    <br>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

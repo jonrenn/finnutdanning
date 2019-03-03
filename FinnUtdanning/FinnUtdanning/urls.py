@@ -17,21 +17,14 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+from django.views.generic import TemplateView
 
-from apps.api.views import aboutpage
-from apps.studyadvisor.views import frontpage, nyInteresse, nyttStudie, endre, endreInteresse, endreStudie, slettInteresse, slettStudie
+from apps.studyadvisor.views import frontpage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', frontpage, name='home'),
-    url(r'^studieforslag/$', frontpage, name='studieforslag'),
-    url(r'^nyInteresse/$', nyInteresse, name='nyInteresse'),
-    url(r'^nyttStudie/$', nyttStudie, name='nyttStudie'),
-    url(r'^endre/$', endre, name='endre'),
-    url(r'^endre/interesse/(?P<id>\d+)/$', endreInteresse, name='endreInteresse'),
-    url(r'^endre/studie/(?P<id>\d+)/$', endreStudie, name='endreStudie'),
-    url(r'^endre/interesse/slett/(?P<id>\d+)/$', slettInteresse, name='slettInteresse'),
-    url(r'^endre/studie/slett/(?P<id>\d+)/$', slettStudie, name='slettStudie'),
+    url(r'^om/$', TemplateView.as_view(template_name='about.html'),name='about'),
     url(r'^bruker/', include('apps.registration.urls'), name='accounts'),
-    url(r'^om/$', aboutpage, name='about'),
+    url(r'^studie/', include('apps.studyadvisor.urls')),
 ]

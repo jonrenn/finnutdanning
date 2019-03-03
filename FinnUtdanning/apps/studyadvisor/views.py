@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F
-from .models import Interesser, Studier, RelevantStudie
+from .models import Interesser, Studier, RelevantStudie, Studieforslag
 from .forms import StudieforslagForm, EndreInteresseForm, EndreStudieForm
 from django.contrib.auth.decorators import user_passes_test
 
@@ -36,13 +36,26 @@ def frontpage(request):
                 'interesser' : sf.interesser.all().order_by('navn'),
                 'popInteresser' : Interesser.objects.all().order_by('-popularitet')[:10]
             }
-            return render(request, "studieforslag.html", context)
+            return render(request, "studyadvisor/studieforslag.html", context)
 
     form = StudieforslagForm()
     context = {
         'form' : form
     }
     return render(request, "frontpage.html", context)
+
+
+def prev_searches(request):
+    studie_forslag = Studieforslag.objects.all().filter(student=request.user).reverse()
+    prev_search = []
+    for studieforslag in studie_forslag:
+        relevantstudie = RelevantStudie.objects.all().filter(studieforslag=studieforslag).order_by('-relevans')
+        prev_search.append([studieforslag,relevantstudie])
+    context = {
+        'searches': prev_search,
+    }
+    return render(request, "studyadvisor/prev_searches.html", context)
+
 
 @user_passes_test(veileder_check, login_url='home', redirect_field_name=None)
 def nyInteresse(request):
@@ -59,7 +72,8 @@ def nyInteresse(request):
         context = {
             'form' : form
         }
-        return render(request, "nyinteresse.html", context)
+        return render(request, "studyadvisor/nyinteresse.html", context)
+
 
 @user_passes_test(veileder_check, login_url='home', redirect_field_name=None)
 def nyttStudie(request):
@@ -77,7 +91,7 @@ def nyttStudie(request):
         context = {
             'form' : form
         }
-        return render(request, "nystudieretning.html", context)
+        return render(request, "studyadvisor/nystudieretning.html", context)
 
 
 @user_passes_test(veileder_check, login_url='home', redirect_field_name=None)
@@ -86,7 +100,8 @@ def endre(request):
         'interesser' : Interesser.objects.all().order_by('navn'),
         'studier' : Studier.objects.all().order_by('navn')
     }
-    return render(request, "endrestudint.html", context)
+    return render(request, "studyadvisor/endrestudint.html", context)
+
 
 @user_passes_test(veileder_check, login_url='home', redirect_field_name=None)
 def endreInteresse(request, id):
@@ -106,7 +121,8 @@ def endreInteresse(request, id):
             'form' : form,
             'id' : id
         }
-        return render(request, "endreinteresse.html", context)
+        return render(request, "studyadvisor/endreinteresse.html", context)
+
 
 @user_passes_test(veileder_check, login_url='home', redirect_field_name=None)
 def endreStudie(request, id):
@@ -127,13 +143,15 @@ def endreStudie(request, id):
             'form' : form,
             'id' : id
         }
-        return render(request, "endrestudie.html", context)
+        return render(request, "studyadvisor/endrestudie.html", context)
+
 
 @user_passes_test(veileder_check, login_url='home', redirect_field_name=None)
 def slettInteresse(request, id):
     interesse = Interesser.objects.get(id=id)
     interesse.delete()
     return redirect("endre")
+
 
 @user_passes_test(veileder_check, login_url='home', redirect_field_name=None)
 def slettStudie(request, id):
