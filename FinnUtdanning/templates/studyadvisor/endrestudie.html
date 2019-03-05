@@ -18,8 +18,8 @@
                         <br>
                         {{ form.interesser }}
                         <br>
-                        <a class="btn btn-default" href="/endre" role="button">Tilbake</a>
-                        <a class="btn btn-default" href="/endre/studie/slett/{{ id }}/" role="button">Slett</a>
+                        <a class="btn btn-default" href="{% url 'endre' %}" role="button">Tilbake</a>
+                        <a class="btn btn-default" href="/studie/endre/studie/slett/{{ id }}/" role="button">Slett</a>
                         <input class="btn btn-default" type="submit" value="Oppdater" />
                     </form>
         </div>

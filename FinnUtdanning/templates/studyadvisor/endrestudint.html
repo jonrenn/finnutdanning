@@ -5,7 +5,7 @@
     <article>
         <h1>Endre interesser/studier</h1>
         <br>
-        <div class="panel panel-primary">
+        <div class="panel panel-primary" style="margin-bottom: 5px">
             <div class="panel-heading">Interesser</div>
 
             <div class="list-group" style="max-height:250px; overflow-y: scroll;">
@@ -14,8 +14,9 @@
                 {% endfor %}
             </div>
         </div>
-        <br>
-        <div class="panel panel-primary">
+        <a class="btn btn-default" href="{% url 'nyInteresse' %}" role="button">Opprett ny interesse</a>
+        <br><br>
+        <div class="panel panel-primary" style="margin-bottom: 5px">
             <div class="panel-heading">Studier</div>
 
             <div class="list-group" style="max-height:250px; overflow-y: scroll;">
@@ -24,6 +25,7 @@
                 {% endfor %}
             </div>
         </div>
+        <a class="btn btn-default" href="{% url 'nyInteresse' %}" role="button">Opprett nytt studie</a>
     </article>
 {% endblock %}
 {% block script %}
