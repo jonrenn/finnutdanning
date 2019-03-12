@@ -86,6 +86,14 @@ a.btn{
     font-size: 14px;
 }
 
+a.btn-default:hover{
+    border-color: #adadad;
+}
+
+a.btn:hover{
+    border-color: #adadad;
+}
+
 input.btn {
     font-size: 14px;
 }
