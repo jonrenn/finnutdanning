@@ -17,13 +17,14 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+from django.views.generic import TemplateView
 
-from apps.api.views import frontpage, aboutpage
+from apps.studyadvisor.views import frontpage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
     url(r'^$', frontpage, name='home'),
+    url(r'^om/$', TemplateView.as_view(template_name='about.html'),name='about'),
     url(r'^bruker/', include('apps.registration.urls'), name='accounts'),
-    url(r'^om/$', aboutpage, name='about'),
+    url(r'^studie/', include('apps.studyadvisor.urls')),
 ]

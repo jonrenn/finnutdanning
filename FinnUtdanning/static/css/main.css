@@ -78,6 +78,30 @@ p {
     font-size: 14px;
 }
 
+a.btn-default{
+    font-size: 14px;
+}
+
+a.btn{
+    font-size: 14px;
+}
+
+a.btn-default:hover{
+    border-color: #adadad;
+}
+
+a.btn:hover{
+    border-color: #adadad;
+}
+
+input.btn {
+    font-size: 14px;
+}
+
+input.btn-default {
+    font-size: 14px;
+}
+
 .navbar {
     border: none;
     text-align: center;

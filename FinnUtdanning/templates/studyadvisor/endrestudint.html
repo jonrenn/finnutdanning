@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Forside{% endblock %}
+{% block text %}
+    <article>
+        <h1>Endre interesser/studier</h1>
+        <br>
+        <div class="panel panel-primary" style="margin-bottom: 5px">
+            <div class="panel-heading">Interesser</div>
+
+            <div class="list-group" style="max-height:250px; overflow-y: scroll;">
+                {% for i in interesser %}
+                    <a href="interesse/{{i.id}}" class="list-group-item">{{i.navn}}<span style="font-weight: bold; float:right;">[ID{{i.id}}]</span></a>
+                {% endfor %}
+            </div>
+        </div>
+        <a class="btn btn-default" href="{% url 'nyInteresse' %}" role="button">Opprett ny interesse</a>
+        <br><br>
+        <div class="panel panel-primary" style="margin-bottom: 5px">
+            <div class="panel-heading">Studier</div>
+
+            <div class="list-group" style="max-height:250px; overflow-y: scroll;">
+                {% for s in studier %}
+                    <a href="studie/{{s.id}}" class="list-group-item">{{s.navn}}<span style="font-weight: bold; float:right;">[ID{{s.id}}]</span></a>
+                {% endfor %}
+            </div>
+        </div>
+        <a class="btn btn-default" href="{% url 'nyInteresse' %}" role="button">Opprett nytt studie</a>
+    </article>
+{% endblock %}
+{% block script %}
+{% endblock %}

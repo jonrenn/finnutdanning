@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Forside{% endblock %}
+{% block text %}
+    <article>
+        <h1>Endre interesse</h1>
+        <br>
+        <div class="centerContainer">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                        {{ form.navn.label_tag }}
+                        {{ form.navn }}
+                        </div>
+                        <br>
+                        <a class="btn btn-default" href="{% url 'endre' %}" role="button">Tilbake</a>
+                        <a class="btn btn-default" href="/studie/endre/interesse/slett/{{ id }}/" role="button">Slett</a>
+                        <input class="btn btn-default" type="submit" value="Oppdater" />
+                    </form>
+        </div>
+    </article>
+{% endblock %}
+{% block script %}
+{% endblock %}

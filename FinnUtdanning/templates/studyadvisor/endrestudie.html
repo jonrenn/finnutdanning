@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Forside{% endblock %}
+{% block text %}
+    <article>
+        <h1>Endre studie</h1>
+        <br>
+        <div class="centerContainer">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                                    {{ form.navn.label_tag }}
+                                    {{ form.navn }}
+                        </div>
+                        <br>
+                        <h2>Relevante interesser:</h2>
+                        <input type="text" placeholder="Søk..." class="fitContent" oninput="filtersearch(this)" style="padding: .75rem 1.25rem;" />
+                        <br>
+                        {{ form.interesser }}
+                        <br>
+                        <a class="btn btn-default" href="{% url 'endre' %}" role="button">Tilbake</a>
+                        <a class="btn btn-default" href="/studie/endre/studie/slett/{{ id }}/" role="button">Slett</a>
+                        <input class="btn btn-default" type="submit" value="Oppdater" />
+                    </form>
+        </div>
+    </article>
+{% endblock %}
+{% block script %}
+<script src="/static/js/finnstudie.js" type="text/javascript"></script>
+{% endblock %}
