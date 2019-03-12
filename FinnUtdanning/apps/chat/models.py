@@ -12,4 +12,4 @@ class Message(models.Model):
 
 class Chat(models.Model):
     participents = models.ManyToManyField(Student)
-    messages = models.ManyToManyField(Message)
+    messages = models.ManyToManyField(Message, blank=True)
