@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from apps.studyadvisor.views import frontpage, prev_searches, nyInteresse, nyttStudie, endre, endreInteresse, endreStudie, slettInteresse, slettStudie
+from apps.studyadvisor.views import frontpage, prev_searches, nyInteresse, nyttStudie, endre, endreInteresse, endreStudie, slettInteresse, slettStudie, personligFargetema, globaltFargetema
 
 urlpatterns = [
     url(r'^forslag/$', frontpage, name='studieforslag'),
@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^endre/studie/(?P<id>\d+)/$', endreStudie, name='endreStudie'),
     url(r'^endre/interesse/slett/(?P<id>\d+)/$', slettInteresse, name='slettInteresse'),
     url(r'^endre/studie/slett/(?P<id>\d+)/$', slettStudie, name='slettStudie'),
+    url(r'^personligFargetema/$', personligFargetema, name='personligFargetema'),
+    url(r'^globaltFargetema/$', globaltFargetema, name='globaltFargetema'),
 ]

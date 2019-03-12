@@ -2,7 +2,7 @@
 {% load studyadvisor_extras %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary" {% if navbarFarge %} style="background-color: {{ navbarFarge }} !important;" {% endif %}>
     <div class="container" id="nav-container">
         <a class="navbar-brand" href="{% url 'home' %}" style="font-size: 25px">FinnUtdanning</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -19,6 +19,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'tidligere_sok' %}" style="margin-right: 5px;">Tidligere søk</a>
                     </li>
+                    {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'globaltFargetema' %}" style="margin-right: 5px;">Globalt fargetema</a>
+                    </li>
+                    {% endif %}
                 {% endif %}
                 <li class="nav-item dropdown">
                     {% if request.user|has_group:"veileder" %}
@@ -30,6 +35,7 @@
                             <a class="dropdown-item" href="{% url 'nyInteresse' %}">Ny interesse</a>
                             <a class="dropdown-item" href="{% url 'nyttStudie' %}">Ny studieretning</a>
                             <a class="dropdown-item" href="{% url 'endre' %}">Endre eksisterende</a>
+                            <a class="dropdown-item" href="{% url 'personligFargetema' %}">Personlig fargetema</a>
                         </div>
                     {% endif %}
                 </li>

@@ -30,3 +30,11 @@ class RelevantStudie(models.Model):
     studieforslag = models.ForeignKey(Studieforslag, on_delete=models.CASCADE)
     studie = models.ForeignKey(Studier, on_delete=models.CASCADE)
     relevans = models.IntegerField(default=0)
+
+class Fargetema(models.Model):
+    bruker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    brukPersonlig = models.BooleanField(default=True)
+    navbarFarge = models.CharField(max_length=7)
+    bakgrunnFarge = models.CharField(max_length=7)
+    class Meta:
+        verbose_name_plural = "Fargetema"
