@@ -22,7 +22,7 @@
     {% endblock %}
 
 </head>
-<body style="background: #cbc9c2 ">
+<body style="background-color: {% if bakgrunnFarge %}{{ bakgrunnFarge }}{% else %}#cbc9c2{% endif %};">
 
 {% include 'navbar.html' %}
 
