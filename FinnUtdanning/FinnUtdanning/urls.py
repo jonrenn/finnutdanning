@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^om/$', TemplateView.as_view(template_name='about.html'),name='about'),
     url(r'^bruker/', include('apps.registration.urls'), name='accounts'),
     url(r'^studie/', include('apps.studyadvisor.urls')),
+    url(r'^chat/', include ('apps.chat.urls')),
 ]
