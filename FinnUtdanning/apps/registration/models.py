@@ -26,7 +26,7 @@ class Student(AbstractUser):
     full_name = property(get_full_name)
 
     def __str__(self):
-        return self.username
+        return self.full_name
 
     def get_absolute_url(self):
         return reverse('profile', kwargs={'slug': self.username})

@@ -1,8 +1,9 @@
 from django.conf.urls import url
-from django.views.generic import TemplateView
 
-
+from .views import *
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='chat/chat.html'),name='chat'),
+    url(r'^$', chatView, name='chats'),
+    url(r'^(?P<pk>[0-9]+)$', loadChat, name='chat'),
+    url(r'^(?P<pk>[0-9]+)$', sendMessage, name='send_message'),
 ]
