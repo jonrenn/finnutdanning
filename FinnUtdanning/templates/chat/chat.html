@@ -13,69 +13,62 @@
                 <div class="inbox_people">
                     <div class="headind_srch">
                         <div class="recent_heading">
-                            <h4>Dine chater</h4>
+                            <h4>Dine samtaler</h4>
                         </div>
                     </div>
                     <div class="inbox_chat">
-                        {% for chat in allChat %}
-                            <a href="/chat/{{ chat.id }}">
-                                <div class="chat_list{% if chat.id == Chat.id %} active_chat{% endif %}">
-                                    <div class="chat_people">
-                                        <div class="chat_img"><img
-                                                src="https://ptetutorials.com/images/user-profile.png"
-                                                alt="sunil"></div>
-                                        <div class="chat_ib">
-                                            <h5>{% for participent in chat.participents.all %}
-                                                {% if participent != user %}{{ participent.username }}
-                                                {% endif %}{% endfor %}<span
-                                                    class="chat_date">{{ chat.messages.last.sent_at }}</span>
-                                            </h5>
-                                            <p>{{ chat.messages.last.message }}</p>
-                                        </div>
-                                    </div>
+                        {% if not allChat.is_empty %}
+                            <div class="inbox_chat" style="height: 30%;">
+                                <div class="recent_heading" style="text-align: center;margin: 5px;">
+                                    <h5>Viktige meldinger fra Admin</h5>
                                 </div>
-                            </a>
-                        {% endfor %}
-
-                        {% for chat in veilederChats %}
-                            <a href="/chat/{{ chat.id }}">
-                                <div class="chat_list{% if chat.id == Chat.id %} active_chat{% endif %}">
-                                    <div class="chat_people">
-                                        <div class="chat_img"><img
-                                                src="https://ptetutorials.com/images/user-profile.png"
-                                                alt="sunil"></div>
-                                        <div class="chat_ib">
-                                            <h5>{% for participent in chat.participents.all %}
-                                                {% if participent != user %}{{ participent.username }}
-                                                {% endif %}{% endfor %}<span
-                                                    class="chat_date">{{ chat.messages.last.sent_at }}</span>
-                                            </h5>
-                                            <p>{{ chat.messages.last.message }}</p>
+                                {% for chat in allChat %}
+                                    <a href="/chat/{{ chat.id }}">
+                                        <div class="chat_list{% if chat.id == Chat.id %} active_chat{% endif %}">
+                                            <div class="chat_people">
+                                                <div class="chat_img"><img
+                                                        src="https://ptetutorials.com/images/user-profile.png"
+                                                        alt="sunil"></div>
+                                                <div class="chat_ib">
+                                                    <h5>{% for participent in chat.participents.all %}
+                                                        {% if participent != user %}{{ participent.username }}
+                                                        {% endif %}{% endfor %}<span
+                                                            class="chat_date">{{ chat.messages.last.sent_at }}</span>
+                                                    </h5>
+                                                    <p>{{ chat.messages.last.message }}</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <div class="inbox_chat" style="height: 70%;">
+                                <div class="recent_heading" style="margin: 5px;">
+                                    <h5>Samtaler med veileder</h5>
                                 </div>
-                            </a>
-                        {% endfor %}
-
-                        {% for chat in chats %}
-                            <a href="/chat/{{ chat.id }}">
-                                <div class="chat_list{% if chat.id == Chat.id %} active_chat{% endif %}">
-                                    <div class="chat_people">
-                                        <div class="chat_img"><img
-                                                src="https://ptetutorials.com/images/user-profile.png"
-                                                alt="sunil"></div>
-                                        <div class="chat_ib">
-                                            <h5>{% for participent in chat.participents.all %}
-                                                {% if participent != user %}{{ participent }}
-                                                {% endif %}{% endfor %}<span
-                                                    class="chat_date">{{ chat.messages.last.sent_at }}</span>
-                                            </h5>
-                                            <p>{{ chat.messages.last.message }}</p>
+                                {% for chat in chats %}
+                                    <a href="/chat/{{ chat.id }}">
+                                        <div class="chat_list{% if chat.id == Chat.id %} active_chat{% endif %}">
+                                            <div class="chat_people">
+                                                <div class="chat_img"><img
+                                                        src="https://ptetutorials.com/images/user-profile.png"
+                                                        alt="sunil"></div>
+                                                <div class="chat_ib">
+                                                    <h5>{% for participent in chat.participents.all %}
+                                                        {% if participent != user %}{{ participent }}
+                                                        {% endif %}{% endfor %}<span
+                                                            class="chat_date">{{ chat.messages.last.sent_at }}</span>
+                                                    </h5>
+                                                    <p>{{ chat.messages.last.message }}</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </a>
-                        {% endfor %}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 {% if Chat != None %}
@@ -96,7 +89,8 @@
                                                 alt="sunil"></div>
                                         <div class="received_msg">
                                             <div class="received_withd_msg">
-                                                <span class="time_date" style="margin-top: -5px;">{{ msg.from_user }}</span>
+                                                <span class="time_date"
+                                                      style="margin-top: -5px;">{{ msg.from_user }}</span>
                                                 <p>{{ msg.message }}</p>
                                                 <span class="time_date">{{ msg.sent_at }}</span>
                                             </div>
@@ -107,9 +101,13 @@
                         </div>
                         <div class="type_msg">
                             <div class="input_msg_write">
-                                <input type="text" class="write_msg" placeholder="Type a message"/>
-                                <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
-                                                                              aria-hidden="true"></i></button>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="text" name="{{ form.message.name }}" class="write_msg"
+                                           placeholder="Type a message"/>
+                                    <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o"
+                                                                                  aria-hidden="true"></i></button>
+                                </form>
                             </div>
                         </div>
                     </div>

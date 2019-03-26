@@ -5,33 +5,14 @@ from apps.registration.models import Student
 from django.views.generic.base import TemplateResponseMixin, ContextMixin, View
 
 
-class ChatView(TemplateResponseMixin, ContextMixin, View):
-    def get(self, request, *args, **kwargs):
-        context = getChats(request)
-        return self.render_to_response(context)
-
-
 def chatView(request):
     context = getChats(request)
     return render(request, "chat/chat.html", context)
 
 
-def sendMessage(request, pk):
-    user = request.user
-    if user.is_authenticated:
-        if request.method == "POST":
-            form = SendMessageForm(request.POST)
-            if form.is_valid():
-                chat_id = request.POST['chat_id']
-                text = request.POST['text']
-                message = Message(from_user=user, to_chat_id=chat_id, message=text)
-                message.save()
-    return redirect('chat', pk)
-
-
 def getChats(request):
     user = request.user
-    chats = Chat.objects.filter(participents=user)
+    chats = Chat.objects.filter(participents=user).order_by('-last_message__sent_at')
     Alle = Student.objects.filter(username='Alle')
     allChat = Chat.objects.filter(participents__in=Alle)
     veilederChats = None
@@ -51,11 +32,23 @@ def getChats(request):
 
 
 def loadChat(request, pk):
+    if request.method == "POST":
+        form = SendMessageForm(request.POST)
+        if form.is_valid():
+            send = form.save(commit=False)
+            send.from_user = request.user
+            send.to_chat = Chat.objects.filter(id=pk).first()
+            send.message = form.cleaned_data['message']
+            send.save()
+            updateChats()
+        return redirect('chat', pk)
     context = getChats(request)
     chat = Chat.objects.all().filter(id=pk).first()
+    messages = Message.objects.filter(to_chat=chat)
     user = request.user
     alle = Student.objects.filter(username='Alle').first()
     check = [user, alle]
+    form = SendMessageForm(request.POST)
     if user.groups.filter(name='veileder').exists():
         veileder = Student.objects.filter(username='Veileder').first()
         check.append(veileder)
@@ -68,5 +61,13 @@ def loadChat(request, pk):
 
     context.update({
         'Chat': chat,
+        'messages': messages,
+        'form': form,
     })
     return render(request, "chat/chat.html", context)
+
+
+def updateChats():
+    for chat in Chat.objects.all():
+        chat.messages.set(Message.objects.filter(to_chat = chat))
+        chat.last_message = chat.messages.last()

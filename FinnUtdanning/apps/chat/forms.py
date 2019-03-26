@@ -7,7 +7,12 @@ from .models import Chat, Message
 class SendMessageForm(forms.ModelForm):
     class Meta:
         model = Message
-        fields = ['from_user', 'to_chat', 'message']
+        fields = ['message']
+
+        message = forms.CharField(widget=forms.TextInput(attrs={
+            'class': 'write_msg',
+            'placeholder': '"Type a message"',
+        }), required=True)
 
 
 class CreateNewChatForm(forms.ModelForm):
