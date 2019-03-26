@@ -1,6 +1,7 @@
 {% load static %}
 {% load studyadvisor_extras %}
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
     <div class="container" id="nav-container">
@@ -17,29 +18,39 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'tidligere_sok' %}" style="margin-right: 5px;">Tidligere søk</a>
+                        <a class="nav-link" href="{% url 'tidligere_sok' %}" style="margin-right: 5px;">Tidligere
+                            søk</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'chats' %}" style="margin-right: 5px;">Meldingsboks</a>
                     </li>
                 {% endif %}
-                <li class="nav-item dropdown">
-                    {% if request.user|has_group:"veileder" %}
+                {% if request.user|has_group:"veileder" %}
+                    <li class="nav-item dropdown" style="margin-right: 5px;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
-                                    <span style="padding-right: .5em">Veileder</span>
+                            <span style="padding-right: .5em">Veileder</span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1" style="font-size: 14px">
                             <a class="dropdown-item" href="{% url 'nyInteresse' %}">Ny interesse</a>
                             <a class="dropdown-item" href="{% url 'nyttStudie' %}">Ny studieretning</a>
                             <a class="dropdown-item" href="{% url 'endre' %}">Endre eksisterende</a>
                         </div>
-                    {% endif %}
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="margin-right: 5px;">Veilederinnboks</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#" style="margin-right: 5px;">Send Tilbakemelding</a>
                 </li>
             </ul>
-            <ul class="navbar-nav my-2 my-lg-0" >
+            <ul class="navbar-nav my-2 my-lg-0">
                 <li class="nav-item dropdown">
                     {% if user.is_authenticated %}
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
-                                    <span style="padding-right: .5em">{% firstof user.username  %}</span>
+                            <span style="padding-right: .5em">{% firstof user.username %}</span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size: 14px">
                             <!--<a class="dropdown-item" href="{% url 'profile' user %}">Profil</a>-->
