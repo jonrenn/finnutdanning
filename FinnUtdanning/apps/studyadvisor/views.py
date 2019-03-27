@@ -1,12 +1,81 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F
-from .models import Interesser, Studier, RelevantStudie, Studieforslag
-from .forms import StudieforslagForm, EndreInteresseForm, EndreStudieForm
+from .models import Interesser, Studier, RelevantStudie, Studieforslag, Fargetema
+from .forms import StudieforslagForm, EndreInteresseForm, EndreStudieForm, FargetemaForm
 from django.contrib.auth.decorators import user_passes_test
 
 def veileder_check(user):
     isVeileder = user.groups.all().filter(name='veileder').exists()
     return isVeileder
+
+def send_fargetema(request, context):
+    if request.user.is_authenticated:
+        fargetemaPrivat = Fargetema.objects.filter(bruker=request.user)
+        if len(fargetemaPrivat) > 0 and fargetemaPrivat[0].brukPersonlig == True:
+            context['navbarFarge'] = fargetemaPrivat[0].navbarFarge
+            context['bakgrunnFarge'] = fargetemaPrivat[0].bakgrunnFarge
+            return
+        fargetemaGlobal = Fargetema.objects.filter(bruker=None)
+        if len(fargetemaGlobal) > 0 and fargetemaGlobal[0].brukPersonlig == True:
+            context['navbarFarge'] = fargetemaGlobal[0].navbarFarge
+            context['bakgrunnFarge'] = fargetemaGlobal[0].bakgrunnFarge
+            return
+    return
+
+@user_passes_test(veileder_check, login_url='home', redirect_field_name=None)
+def personligFargetema(request):
+    gamleFargetema = Fargetema.objects.filter(bruker=request.user)
+    if request.method == "POST":
+        form = None
+        if len(gamleFargetema) > 0:
+            form = FargetemaForm(request.POST, instance=gamleFargetema[0])
+        else:
+            nyttFargetema = Fargetema.objects.create(navbarFarge='#000000', bakgrunnFarge='#000000')
+            form = FargetemaForm(request.POST, instance=nyttFargetema)
+        if form.is_valid():
+            fargetema = form.save(commit=False)
+            if request.user.is_authenticated:
+                fargetema.bruker = request.user
+            fargetema.navbarFarge = form.cleaned_data['navbarFarge']
+            fargetema.bakgrunnFarge = form.cleaned_data['bakgrunnFarge']
+            fargetema.save()
+    form = None
+    if len(gamleFargetema) > 0:
+        form = FargetemaForm(instance=gamleFargetema[0])
+    else:
+        form = FargetemaForm()
+    context = {
+        'form' : form
+    }
+    send_fargetema(request, context)
+    return render(request, "studyadvisor/personligfargetema.html", context)
+
+@user_passes_test(lambda u: u.is_staff, login_url='home', redirect_field_name=None)
+def globaltFargetema(request):
+    gamleFargetema = Fargetema.objects.filter(bruker=None)
+    if request.method == "POST":
+        form = None
+        if len(gamleFargetema) > 0:
+            form = FargetemaForm(request.POST, instance=gamleFargetema[0])
+        else:
+            nyttFargetema = Fargetema.objects.create(navbarFarge='#000000', bakgrunnFarge='#000000')
+            form = FargetemaForm(request.POST, instance=nyttFargetema)
+        if form.is_valid():
+            fargetema = form.save(commit=False)
+            fargetema.bruker = None
+            fargetema.navbarFarge = form.cleaned_data['navbarFarge']
+            fargetema.bakgrunnFarge = form.cleaned_data['bakgrunnFarge']
+            fargetema.save()
+    form = None
+    if len(gamleFargetema) > 0:
+        form = FargetemaForm(instance=gamleFargetema[0])
+    else:
+        form = FargetemaForm()
+    context = {
+        'form' : form
+    }
+    send_fargetema(request, context)
+    return render(request, "studyadvisor/globaltfargetema.html", context)
 
 def frontpage(request):
     if request.method == "POST":
@@ -36,12 +105,14 @@ def frontpage(request):
                 'interesser' : sf.interesser.all().order_by('navn'),
                 'popInteresser' : Interesser.objects.all().order_by('-popularitet')[:10]
             }
+            send_fargetema(request, context)
             return render(request, "studyadvisor/studieforslag.html", context)
 
     form = StudieforslagForm()
     context = {
         'form' : form
     }
+    send_fargetema(request, context)
     return render(request, "frontpage.html", context)
 
 
@@ -54,6 +125,7 @@ def prev_searches(request):
     context = {
         'searches': prev_search,
     }
+    send_fargetema(request, context)
     return render(request, "studyadvisor/prev_searches.html", context)
 
 
@@ -72,6 +144,7 @@ def nyInteresse(request):
         context = {
             'form' : form
         }
+        send_fargetema(request, context)
         return render(request, "studyadvisor/nyinteresse.html", context)
 
 
@@ -91,6 +164,7 @@ def nyttStudie(request):
         context = {
             'form' : form
         }
+        send_fargetema(request, context)
         return render(request, "studyadvisor/nystudieretning.html", context)
 
 
@@ -100,6 +174,7 @@ def endre(request):
         'interesser' : Interesser.objects.all().order_by('navn'),
         'studier' : Studier.objects.all().order_by('navn')
     }
+    send_fargetema(request, context)
     return render(request, "studyadvisor/endrestudint.html", context)
 
 
@@ -121,6 +196,7 @@ def endreInteresse(request, id):
             'form' : form,
             'id' : id
         }
+        send_fargetema(request, context)
         return render(request, "studyadvisor/endreinteresse.html", context)
 
 
@@ -143,6 +219,7 @@ def endreStudie(request, id):
             'form' : form,
             'id' : id
         }
+        send_fargetema(request, context)
         return render(request, "studyadvisor/endrestudie.html", context)
 
 

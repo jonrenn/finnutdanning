@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Forside{% endblock %}
+{% block text %}
+    <article>
+        <h1>Endre personlig fargetema</h1>
+        <br>
+        <div class="centerContainer">
+                        <form method="POST">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                {{ form.as_p }}
+                                                </div>
+                                                <br>
+                                                <input class="btn btn-default" type="submit" value="Lagre" />
+                        </form>
+        </div>
+    </article>
+{% endblock %}
+{% block script %}
+{% endblock %}

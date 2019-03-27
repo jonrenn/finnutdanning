@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import widgets
-from .models import Studieforslag, Interesser, Studier
+from .models import Studieforslag, Interesser, Studier, Fargetema
 
 class StudieforslagForm(forms.ModelForm):
     class Meta:
@@ -28,3 +28,11 @@ class EndreStudieForm(forms.ModelForm):
         'class' : 'fitContent',
         'style' : 'height:200px;'
     }), required=True)
+
+class FargetemaForm(forms.ModelForm):
+    class Meta:
+        model = Fargetema
+        fields = ['navbarFarge', 'bakgrunnFarge', 'brukPersonlig']
+        labels = {'navbarFarge': 'Nav-bar farge', 'bakgrunnFarge': 'Bakgrunnsfarge', 'brukPersonlig': 'Bruk fargetema'}
+    navbarFarge = forms.CharField(widget=forms.TextInput(attrs={'type': 'color'}))
+    bakgrunnFarge = forms.CharField(widget=forms.TextInput(attrs={'type': 'color'}))
