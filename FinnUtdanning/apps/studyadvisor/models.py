@@ -1,5 +1,5 @@
 from django.db import models
-from FinnUtdanning import settings
+from apps.registration.models import Student
 
 # Create your models here.
 class Interesser(models.Model):
@@ -19,7 +19,7 @@ class Studier(models.Model):
         verbose_name_plural = "Studier"
 
 class Studieforslag(models.Model):
-    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
     studier = models.ManyToManyField(Studier, through='RelevantStudie')
     interesser = models.ManyToManyField(Interesser)
 
@@ -32,7 +32,7 @@ class RelevantStudie(models.Model):
     relevans = models.IntegerField(default=0)
 
 class Fargetema(models.Model):
-    bruker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    bruker = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
     brukPersonlig = models.BooleanField(default=True)
     navbarFarge = models.CharField(max_length=7)
     bakgrunnFarge = models.CharField(max_length=7)

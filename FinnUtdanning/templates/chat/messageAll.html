@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Send til Alle{% endblock %}
+{% block text %}
+    <article>
+        <h1>Send Melding Til Alle</h1>
+        <br>
+        <div class="centerContainer">
+            <div class="type_msg"
+                 style="border-bottom: 1px solid #c4c4c4; border-left: 1px solid #c4c4c4; border-right: 1px solid #c4c4c4;">
+                <div class="input_msg_write">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="{{ form.message.name }}" class="write_msg"
+                               placeholder="Skriv en melding til alle" autocomplete=""/>
+                        <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o"
+                                                                      aria-hidden="true"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </article>
+{% endblock %}
+{% block script %}
+{% endblock %}

@@ -7,7 +7,8 @@
 {% endblock %}
 {% block content %}
     <div class="container">
-        <h3 class=" text-center" style="font-size: 35px; margin-bottom: 15px; margin-top: -25px;">Meldinger</h3>
+        <h3 class=" text-center" style="font-size: 35px; margin-bottom: 15px; margin-top: -25px;">Veileder
+            Meldingsboks</h3>
         <div class="messaging">
             <div class="inbox_msg" style="border-radius: 10px">
                 <div class="inbox_people">
@@ -16,7 +17,7 @@
                             <h4>Dine samtaler</h4>
                         </div>
                         <div class="recent_heading" style="margin-left: 75px">
-                            <a href="{% url 'ask' %}" style="font-size: 18px; color: #05728f;">Spør en veileder</a>
+                            <a href="{% url 'all' %}" style="font-size: 18px; color: #05728f;">Send melding til alle</a>
                         </div>
                     </div>
                     <div class="inbox_chat">
@@ -26,7 +27,7 @@
                                     <h5>Viktige meldinger fra Admin</h5>
                                 </div>
                                 {% for chat in allChat %}
-                                    <a href="/chat/{{ chat.id }}">
+                                    <a href="/chat/advisor/{{ chat.id }}">
                                         <div class="chat_list{% if chat.id == Chat.id %} active_chat{% endif %}">
                                             <div class="chat_people">
                                                 <div class="chat_img">
@@ -47,13 +48,69 @@
                                 {% endfor %}
                             </div>
                         {% endif %}
-                        <div>
-                            <div class="inbox_chat" style="height: 70%;">
+                        {% if unassignedChats.is_empty %}
+                            <div class="inbox_chat" style="height: 30%;">
                                 <div class="recent_heading" style="margin: 5px;">
-                                    <h5>Samtaler med veileder</h5>
+                                    <h5>Samtaler som venter på veileder</h5>
                                 </div>
-                                {% for chat in chats %}
-                                    <a href="/chat/{{ chat.id }}">
+                                {% for chat in unassignedChats %}
+                                    <a href="/chat/advisor/{{ chat.id }}">
+                                        <div class="chat_list{% if chat.id == Chat.id %} active_chat{% endif %}">
+                                            <div class="chat_people">
+                                                <div class="chat_img">
+                                                    <img src="/uploads/
+
+                                                            {% if chat.participents.first != user %}{{ chat.participents.first.getImage }}{% elif chat.participents.last != user %}{{ chat.participents.last.getImage }}{% endif %}"
+                                                         alt="Profilbilde">
+                                                </div>
+                                                <div class="chat_ib">
+                                                    <h5>{% for participent in chat.participents.all %}
+                                                        {% if participent != user %}{{ participent }}
+                                                        {% endif %}{% endfor %}<span
+                                                            class="chat_date">{{ chat.messages.last.sent_at }}</span>
+                                                    </h5>
+                                                    <p>{{ chat.messages.last.message }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <div class="inbox_chat" style="height: 30%;">
+                                <div class="recent_heading" style="margin: 5px;">
+                                    <h5>Dine samtaler med brukere</h5>
+                                </div>
+                                {% for chat in yourAssigned %}
+                                    <a href="/chat/advisor/{{ chat.id }}">
+                                        <div class="chat_list{% if chat.id == Chat.id %} active_chat{% endif %}">
+                                            <div class="chat_people">
+                                                <div class="chat_img">
+                                                    <img src="/uploads/{% if chat.participents.first != user %}{{ chat.participents.first.getImage }}{% elif chat.participents.last != user %}{{ chat.participents.last.getImage }}{% endif %}"
+                                                         alt="Profilbilde">
+                                                </div>
+                                                <div class="chat_ib">
+                                                    <h5>{% for participent in chat.participents.all %}
+                                                        {% if participent != user %}{{ participent }}
+                                                        {% endif %}{% endfor %}<span
+                                                            class="chat_date">{{ chat.messages.last.sent_at }}</span>
+                                                    </h5>
+                                                    <p>{{ chat.messages.last.message }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="inbox_chat" style="height: 30%;">
+                                <div class="recent_heading" style="margin: 5px;">
+                                    <h5>Alle samtaler med brukere</h5>
+                                </div>
+                                {% for chat in assignedChats %}
+                                    <a href="/chat/advisor/{{ chat.id }}">
                                         <div class="chat_list{% if chat.id == Chat.id %} active_chat{% endif %}">
                                             <div class="chat_people">
                                                 <div class="chat_img">
@@ -124,4 +181,4 @@
 {% block script %}
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-{% endblock %}
+{% endblock %}>
