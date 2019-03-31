@@ -8,6 +8,18 @@ from django.views import generic
 from .forms import StudentCreationForm
 from .models import Student
 
+def send_fargetema(request, context):
+    if request.user.is_authenticated:
+        fargetemaPrivat = Fargetema.objects.filter(bruker=request.user)
+        if len(fargetemaPrivat) > 0 and fargetemaPrivat[0].brukPersonlig == True:
+            context['navbarFarge'] = fargetemaPrivat[0].navbarFarge
+            context['bakgrunnFarge'] = fargetemaPrivat[0].bakgrunnFarge
+            return
+    fargetemaGlobal = Fargetema.objects.filter(bruker=None)
+    if len(fargetemaGlobal) > 0 and fargetemaGlobal[0].brukPersonlig == True:
+        context['navbarFarge'] = fargetemaGlobal[0].navbarFarge
+        context['bakgrunnFarge'] = fargetemaGlobal[0].bakgrunnFarge
+    return
 
 class Profile(LoginRequiredMixin, generic.DetailView):
     model = Student
@@ -17,9 +29,14 @@ class Profile(LoginRequiredMixin, generic.DetailView):
 
 def redirect_to_profile(request):
     if request.user.is_authenticated:
-        return redirect('profile', request.user)
+        context = {
+            'user' : request.user
+        }
+        return render(request, 'profile.html', context)
     else:
-        return redirect('login')
+        context = {}
+        send_fargetema(request, context)
+        return render(request, 'login.html', context)
 
 
 class Register(generic.CreateView):

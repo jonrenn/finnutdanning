@@ -15,11 +15,10 @@ def send_fargetema(request, context):
             context['navbarFarge'] = fargetemaPrivat[0].navbarFarge
             context['bakgrunnFarge'] = fargetemaPrivat[0].bakgrunnFarge
             return
-        fargetemaGlobal = Fargetema.objects.filter(bruker=None)
-        if len(fargetemaGlobal) > 0 and fargetemaGlobal[0].brukPersonlig == True:
-            context['navbarFarge'] = fargetemaGlobal[0].navbarFarge
-            context['bakgrunnFarge'] = fargetemaGlobal[0].bakgrunnFarge
-            return
+    fargetemaGlobal = Fargetema.objects.filter(bruker=None)
+    if len(fargetemaGlobal) > 0 and fargetemaGlobal[0].brukPersonlig == True:
+        context['navbarFarge'] = fargetemaGlobal[0].navbarFarge
+        context['bakgrunnFarge'] = fargetemaGlobal[0].bakgrunnFarge
     return
 
 @user_passes_test(veileder_check, login_url='home', redirect_field_name=None)

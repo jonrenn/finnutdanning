@@ -7,30 +7,31 @@
         <br>
         <div class="panel panel-primary">
             <div class="panel-heading">Studieretninger</div>
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Studieretning</th>
-                        <th>Relevans</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for s in studier %}
-                    <tr>
-                        <th scope="row">{{forloop.counter}}</th>
-                        <td>{{s.studie.navn}}</td>
-                        <td>{{s.relevans}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div style="max-height:250px; overflow-y: scroll;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Studieretning</th>
+                            <th>Relevans</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in studier %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{s.studie.navn}}</td>
+                            <td>{{s.relevans}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <br>
         <div class="panel panel-primary">
             <div class="panel-heading">Valgte interesser</div>
-            <ul class="list-group">
+            <ul class="list-group" style="max-height:250px; overflow-y: scroll;">
             {% for i in interesser %}
                 <li class="list-group-item" onclick="changeList(this)">{{i.navn}}{{test}}</li>
             {% endfor %}
@@ -39,24 +40,26 @@
         <br>
         <div class="panel panel-primary">
             <div class="panel-heading">Populære interesser</div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Fritidsinteresse</th>
-                        <th>Popularitet</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for popi in popInteresser %}
-                    <tr>
-                        <th scope="row">{{forloop.counter}}</th>
-                        <td>{{popi.navn}}</td>
-                        <td>{{popi.popularitet}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div style="max-height:250px; overflow-y: scroll;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Fritidsinteresse</th>
+                            <th>Popularitet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for popi in popInteresser %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{popi.navn}}</td>
+                            <td>{{popi.popularitet}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </article>
 {% endblock %}
