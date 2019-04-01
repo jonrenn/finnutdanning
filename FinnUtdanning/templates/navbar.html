@@ -22,15 +22,12 @@
                         <a class="nav-link" href="{% url 'tidligere_sok' %}" style="margin-right: 5px;">Tidligere
                             søk</a>
                     </li>
-                    {% if user.is_staff %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'globaltFargetema' %}" style="margin-right: 5px;">Globalt
-                                fargetema</a>
-                        </li>
-                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'chats' %}" style="margin-right: 5px;">Meldingsboks</a>
+                    </li>
                 {% endif %}
-                {% if request.user|has_group:"veileder" or user_staff %}
-                    <li class="nav-item dropdown">
+                {% if request.user|has_group:"veileder" or user.is_staff %}
+                    <li class="nav-item dropdown" style="margin-right: 5px;">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
                             <span style="padding-right: .5em">Veileder</span>
@@ -40,9 +37,24 @@
                             <a class="dropdown-item" href="{% url 'nyttStudie' %}">Ny studieretning</a>
                             <a class="dropdown-item" href="{% url 'endre' %}">Endre eksisterende</a>
                             <a class="dropdown-item" href="{% url 'personligFargetema' %}">Personlig fargetema</a>
-                        </div>
+                            <a class="dropdown-item" href="{% url 'advisorChats' %}">Veilederinnboks</a>
                     </li>
                 {% endif %}
+                {% if user.is_staff %}
+                    <li class="nav-item dropdown" style="margin-right: 5px;">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <span style="padding-right: .5em">Admin</span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1" style="font-size: 14px">
+                            <a class="dropdown-item" href="{% url 'globaltFargetema' %}" style="margin-right: 5px;">Globalt fargetema</a>
+                            <a class="dropdown-item" href="{% url 'adminChats' %}">Admininnboks</a>
+                            <a class="dropdown-item" href="{% url 'admin:index' %}">Administrering</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'feedback' %}" style="margin-right: 5px;">Send Tilbakemelding</a>
+                </li>
             </ul>
             <ul class="navbar-nav my-2 my-lg-0">
                 <li class="nav-item dropdown">
@@ -52,7 +64,6 @@
                             <span style="padding-right: .5em">{% firstof user.username %}</span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size: 14px">
-                            <!--<a class="dropdown-item" href="{% url 'profile' user %}">Profil</a>-->
                             {% if user.is_staff %}
                                 <a class="dropdown-item" href="{% url 'admin:index' %}">Administrering</a>
                             {% endif %}

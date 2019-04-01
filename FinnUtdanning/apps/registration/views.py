@@ -1,12 +1,12 @@
-from django.contrib.auth.forms import  UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
-from django.shortcuts import redirect, render
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import  render, redirect
+from django.urls import reverse_lazy
 from django.views import generic
 
-from .forms import StudentCreationForm
+from .forms import StudentCreationForm, StudentChangeForm
 from .models import Student
+from apps.studyadvisor.models import Fargetema
 
 def send_fargetema(request, context):
     if request.user.is_authenticated:
@@ -29,10 +29,7 @@ class Profile(LoginRequiredMixin, generic.DetailView):
 
 def redirect_to_profile(request):
     if request.user.is_authenticated:
-        context = {
-            'user' : request.user
-        }
-        return render(request, 'profile.html', context)
+        return redirect('home', request.user)
     else:
         context = {}
         send_fargetema(request, context)

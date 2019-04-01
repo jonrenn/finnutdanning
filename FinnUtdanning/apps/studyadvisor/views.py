@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import F
 from .models import Interesser, Studier, RelevantStudie, Studieforslag, Fargetema
 from .forms import StudieforslagForm, EndreInteresseForm, EndreStudieForm, FargetemaForm
 from django.contrib.auth.decorators import user_passes_test

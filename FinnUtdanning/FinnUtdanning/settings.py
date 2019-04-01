@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'apps.registration',
     'apps.studyadvisor',
+    'apps.chat'
 ]
 
 MIDDLEWARE = [
