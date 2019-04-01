@@ -9,5 +9,4 @@ urlpatterns = [
     url(r'^logout$', LogoutView.as_view(), name='logout'),
     url(r'^register$', Register.as_view(), name='register'),
     url(r'^(?P<slug>[\w.@+-]+)$', Profile.as_view(), name='profile'),
-    url(r'^endre$', EditProfile.as_view(), name='edit_profile'),
 ]
