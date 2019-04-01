@@ -140,6 +140,7 @@ def messageAll(request):
                 chat = Chat.objects.create()
                 chat.participents.set([alle])
                 chat.is_closed = True
+                chat.save()
                 pk = chat.id
                 send = form.save(commit=False)
                 send.from_user = admin
