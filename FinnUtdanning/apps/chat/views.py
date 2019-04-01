@@ -232,7 +232,7 @@ def adminChatView(request):
 def getAdminChats(request):
     user = request.user
     if user.is_staff:
-        chats = Chat.objects.filter(participents=user).order_by('-last_message__sent_at')
+        chats = Chat.objects.all()
         admin = Student.objects.filter(username='Admin').first()
         veileder = Student.objects.filter(username='Veileder').first()
         veilederChats = Chat.objects.filter(participents=veileder).exclude(participents=admin)
