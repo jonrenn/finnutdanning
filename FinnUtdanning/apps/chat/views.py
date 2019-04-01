@@ -232,19 +232,20 @@ def getAdminChats(request):
     user = request.user
     if user.is_staff:
         chats = Chat.objects.filter(participents=user).order_by('-last_message__sent_at')
-        alle = Student.objects.filter(username='Alle')
-        allChat = Chat.objects.filter(participents__in=alle)
-        veileder = Student.objects.filter(username='Veileder')
-        veilederChats = Chat.objects.filter(participents__in=veileder)
-        yourAssigned = veilederChats.filter(participents__in=Student.objects.filter(username=user.username))
-        admin = Student.objects.filter(username='Admin')
-        chatsWithAdmin = Chat.objects.filter(participents__in=admin and Student.objects.filter(username=user.username))
-
+        admin = Student.objects.filter(username='Admin').first()
+        veileder = Student.objects.filter(username='Veileder').first()
+        veilederChats = Chat.objects.filter(participents=veileder).exclude(participents=admin)
+        yourAssigned = veilederChats.filter(participents__username=user.username)
+        chatsWithAdmin = Chat.objects.filter(participents=admin)
+        chatsWithAdmin = chatsWithAdmin.filter(participents=veileder)
+        chatsWithAdmin = chatsWithAdmin.filter(participents=user)
 
         context = {
             'user': user,
             'chats': chats,
-            'allChat': allChat,
+            'admin': admin,
+            'veileder': veileder,
+            'veilederChats': veilederChats,
             'yourAssigned': yourAssigned,
             'chatsWithAdmin': chatsWithAdmin,
             'chat': None,
@@ -261,8 +262,10 @@ def loadAdminChat(request, pk):
         if request.method == "POST":
             form = SendMessageForm(request.POST)
             if form.is_valid():
-                if not user in chat.participents:
+                if not user in chat.participents.all():
                     chat.participents.add(user)
+                    chat.is_assigned = True
+                    chat.save()
                 send = form.save(commit=False)
                 send.from_user = user
                 send.to_chat = Chat.objects.filter(id=pk).first()
@@ -283,7 +286,7 @@ def loadAdminChat(request, pk):
             'messages': messages,
             'form': form,
         })
-        return render(request, "chat/chat.html", context)
+        return render(request, "chat/AdminInbox.html", context)
     return redirect('chats')
 
 

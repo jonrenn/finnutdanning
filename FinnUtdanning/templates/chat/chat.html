@@ -106,13 +106,18 @@
                         </div>
                         <div class="type_msg">
                             <div class="input_msg_write">
-                                <form method="POST">
-                                    {% csrf_token %}
-                                    <input type="text" name="{{ form.message.name }}" class="write_msg"
-                                           placeholder="Skriv en melding" autocomplete="off" required/>
-                                    <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o"
-                                                                                  aria-hidden="true"></i></button>
-                                </form>
+                                {% if not Chat.is_closed or user.is_staff %}
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input type="text" name="{{ form.message.name }}" class="write_msg"
+                                               placeholder="Skriv en melding" autocomplete="off" required/>
+                                        <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o"
+                                                                                      aria-hidden="true"></i></button>
+                                    </form>
+                                {% else %}
+                                    <input type="text" name="{{ form.message.name }}" class="write_msg disabled"
+                                           placeholder="Denne chaten er lukket, har du flere spørsmål må du spørre en ny veileder" autocomplete="off" required/>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
