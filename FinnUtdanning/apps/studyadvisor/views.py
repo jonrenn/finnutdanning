@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import F
 from .models import Interesser, Studier, RelevantStudie, Studieforslag, Fargetema
 from .forms import StudieforslagForm, EndreInteresseForm, EndreStudieForm, FargetemaForm
 from django.contrib.auth.decorators import user_passes_test
@@ -15,11 +14,10 @@ def send_fargetema(request, context):
             context['navbarFarge'] = fargetemaPrivat[0].navbarFarge
             context['bakgrunnFarge'] = fargetemaPrivat[0].bakgrunnFarge
             return
-        fargetemaGlobal = Fargetema.objects.filter(bruker=None)
-        if len(fargetemaGlobal) > 0 and fargetemaGlobal[0].brukPersonlig == True:
-            context['navbarFarge'] = fargetemaGlobal[0].navbarFarge
-            context['bakgrunnFarge'] = fargetemaGlobal[0].bakgrunnFarge
-            return
+    fargetemaGlobal = Fargetema.objects.filter(bruker=None)
+    if len(fargetemaGlobal) > 0 and fargetemaGlobal[0].brukPersonlig == True:
+        context['navbarFarge'] = fargetemaGlobal[0].navbarFarge
+        context['bakgrunnFarge'] = fargetemaGlobal[0].bakgrunnFarge
     return
 
 @user_passes_test(veileder_check, login_url='home', redirect_field_name=None)

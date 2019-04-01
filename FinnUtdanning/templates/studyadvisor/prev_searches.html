@@ -7,7 +7,7 @@
                 <br><br>
                 {% for studieforslag, relevante_studier in searches reversed%}
                     <div class="white-box center-block" id="text-box" style="background: white; margin-bottom:20px; width:600px; border-radius: 10px; font-size: 14px; text-align: center">
-                        <div class="row">
+                        <div class="row" style="max-height:250px; overflow-y: scroll;">
                             <div class="col-xs-6">
                                 <h3>Interesser søkt</h3>
                                 {% for interesse in studieforslag.interesser.all%}
