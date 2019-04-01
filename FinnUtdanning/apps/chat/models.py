@@ -13,3 +13,6 @@ class Chat(models.Model):
     participents = models.ManyToManyField(Student)
     messages = models.ManyToManyField(Message, blank=True)
     last_message = models.ForeignKey('Message', on_delete=models.CASCADE, blank=True, null=True, related_name='+')
+    is_closed = models.BooleanField(default=False)
+    is_feedback = models.BooleanField(default=False)
+    is_assigned = models.BooleanField(default=False)

@@ -30,20 +30,24 @@ def getChats(request):
 
 
 def loadChat(request, pk):
+    chat = Chat.objects.all().filter(id=pk).first()
+    user = request.user
     if request.method == "POST":
         form = SendMessageForm(request.POST)
         if form.is_valid():
             send = form.save(commit=False)
-            send.from_user = request.user
-            send.to_chat = Chat.objects.filter(id=pk).first()
+            send.from_user = user
+            send.to_chat = chat
             send.message = form.cleaned_data['message']
+            if send.message == "!close" and (user.is_staff or user.groups.filter(name='veileder').exists()):
+                send.message = "Denne chaten er nå lukket"
+                chat.is_closed = True
+                chat.save()
             send.save()
             updateChats()
         return redirect('chat', pk)
     context = getChats(request)
-    chat = Chat.objects.all().filter(id=pk).first()
     messages = Message.objects.filter(to_chat=chat)
-    user = request.user
     alle = Student.objects.filter(username='Alle').first()
     check = [user, alle]
     form = SendMessageForm(request.POST)
@@ -69,6 +73,7 @@ def updateChats():
     for chat in Chat.objects.all():
         chat.messages.set(Message.objects.filter(to_chat=chat))
         chat.last_message = chat.messages.last()
+        chat.save()
 
 
 def sendFeedback(request):
@@ -81,7 +86,8 @@ def sendFeedback(request):
             admin = Student.objects.filter(username='Admin').first()
             chat = Chat.objects.create()
             chat.participents.set([admin, user])
-
+            chat.is_feedback = True
+            chat.save()
             send = form.save(commit=False)
             send.from_user = user
             send.to_chat = chat
@@ -133,6 +139,7 @@ def messageAll(request):
                 admin = Student.objects.filter(username='Admin').first()
                 chat = Chat.objects.create()
                 chat.participents.set([alle])
+                chat.is_closed = True
                 pk = chat.id
                 send = form.save(commit=False)
                 send.from_user = admin
@@ -140,7 +147,7 @@ def messageAll(request):
                 send.message = form.cleaned_data['message']
                 send.save()
                 updateChats()
-            return redirect('advisorChat', pk)
+            return redirect('adminChat', pk)
         form = SendMessageForm(request.POST)
         context = {
             'form': form,
@@ -159,23 +166,19 @@ def getAdvisorChats(request):
     user = request.user
     if user.is_staff or user.groups.all().filter(name='veileder').exists():
         chats = Chat.objects.filter(participents=user).order_by('-last_message__sent_at')
-        alle = Student.objects.filter(username='Alle')
-        allChat = Chat.objects.filter(participents__in=alle)
-        veileder = Student.objects.filter(username='Veileder')
-        veilederChats = Chat.objects.filter(participents__in=veileder)
-        assignedChats = (veilederChats.annotate(num_part=Count('participents'))).filter(num_part__gt=2)
-        yourAssigned = veilederChats.filter(participents__in=Student.objects.filter(username=user.username))
-        unassignedChats = (veilederChats.annotate(num_part=Count('participents'))).filter(num_part__gt=0).exclude(
-            num_part__gt=2)
-        admin = Student.objects.filter(username='Admin')
-        chatsWithAdmin = Chat.objects.filter(participents__in=admin and Student.objects.filter(username=user.username))
+        admin = Student.objects.filter(username='Admin').first()
+        veileder = Student.objects.filter(username='Veileder').first()
+        veilederChats = Chat.objects.filter(participents=veileder).exclude(participents=admin)
+        yourAssigned = veilederChats.filter(participents__username=user.username)
+        chatsWithAdmin = Chat.objects.filter(participents=admin)
+        chatsWithAdmin = chatsWithAdmin.filter(participents=veileder)
+        chatsWithAdmin = chatsWithAdmin.filter(participents=user)
 
         context = {
             'user': user,
             'chats': chats,
-            'allChat': allChat,
-            'unassignedChats': unassignedChats,
-            'assignedChats': assignedChats,
+            'veileder': veileder,
+            'veilederChats': veilederChats,
             'yourAssigned': yourAssigned,
             'chatsWithAdmin': chatsWithAdmin,
             'chat': None,
@@ -192,16 +195,22 @@ def loadAdvisorChat(request, pk):
         if request.method == "POST":
             form = SendMessageForm(request.POST)
             if form.is_valid():
-                if not user in chat.participents:
+                if not user in chat.participents.all():
                     chat.participents.add(user)
+                    chat.is_assigned = True
+                    chat.save()
                 send = form.save(commit=False)
                 send.from_user = user
                 send.to_chat = Chat.objects.filter(id=pk).first()
                 send.message = form.cleaned_data['message']
+                if send.message == "!close" and (user.is_staff or user.groups.filter(name='veileder').exists()):
+                    send.message = "Denne chaten er nå lukket"
+                    chat.is_closed = True
+                    chat.save()
                 send.save()
                 updateChats()
             return redirect('advisorChat', pk)
-        context = getChats(request)
+        context = getAdvisorChats(request)
         messages = Message.objects.filter(to_chat=chat)
         form = SendMessageForm(request.POST)
 
@@ -221,22 +230,23 @@ def adminChatView(request):
 
 def getAdminChats(request):
     user = request.user
-    if user.is_staff or user.groups.all().filter(name='veileder').exists():
+    if user.is_staff:
         chats = Chat.objects.filter(participents=user).order_by('-last_message__sent_at')
-        Alle = Student.objects.filter(username='Alle')
-        allChat = Chat.objects.filter(participents__in=Alle)
-        Veileder = Student.objects.filter(username='Veileder')
-        veilederChats = Chat.objects.filter(participents__in=Veileder)
-        assignedChats = (veilederChats.objects.annotate(num=Count('participents')).filter(num__gt=2))
-        unassignedChats = veilederChats.exclude(assignedChats)
+        alle = Student.objects.filter(username='Alle')
+        allChat = Chat.objects.filter(participents__in=alle)
+        veileder = Student.objects.filter(username='Veileder')
+        veilederChats = Chat.objects.filter(participents__in=veileder)
+        yourAssigned = veilederChats.filter(participents__in=Student.objects.filter(username=user.username))
+        admin = Student.objects.filter(username='Admin')
+        chatsWithAdmin = Chat.objects.filter(participents__in=admin and Student.objects.filter(username=user.username))
+
 
         context = {
             'user': user,
             'chats': chats,
             'allChat': allChat,
-            'veilederChats': veilederChats,
-            'unassignedChats': unassignedChats,
-            'assignedChats': assignedChats,
+            'yourAssigned': yourAssigned,
+            'chatsWithAdmin': chatsWithAdmin,
             'chat': None,
         }
         send_fargetema(request, context)
@@ -247,36 +257,58 @@ def getAdminChats(request):
 def loadAdminChat(request, pk):
     chat = Chat.objects.all().filter(id=pk).first()
     user = request.user
-    if request.method == "POST":
+    if user.is_staff:
+        if request.method == "POST":
+            form = SendMessageForm(request.POST)
+            if form.is_valid():
+                if not user in chat.participents:
+                    chat.participents.add(user)
+                send = form.save(commit=False)
+                send.from_user = user
+                send.to_chat = Chat.objects.filter(id=pk).first()
+                send.message = form.cleaned_data['message']
+                if send.message == "!close" and (user.is_staff or user.groups.filter(name='veileder').exists()):
+                    send.message = "Denne chaten er nå lukket"
+                    chat.is_closed = True
+                    chat.save()
+                send.save()
+                updateChats()
+            return redirect('advisorChat', pk)
+        context = getAdminChats(request)
+        messages = Message.objects.filter(to_chat=chat)
         form = SendMessageForm(request.POST)
-        if form.is_valid():
-            if not user in chat.participents:
-                chat.participents.add(user)
-            send = form.save(commit=False)
-            send.from_user = user
-            send.to_chat = Chat.objects.filter(id=pk).first()
-            send.message = form.cleaned_data['message']
-            send.save()
-            updateChats()
-        return redirect('advisorChat', pk)
-    context = getChats(request)
-    messages = Message.objects.filter(to_chat=chat)
-    alle = Student.objects.filter(username='Alle').first()
-    check = [user, alle]
-    form = SendMessageForm(request.POST)
-    if user.groups.filter(name='veileder').exists():
-        veileder = Student.objects.filter(username='Veileder').first()
-        check.append(veileder)
-    x = 0
-    for participent in chat.participents.all():
-        if participent in check:
-            x = 1
-    if x == 0:
-        return redirect("chats")
 
-    context.update({
-        'Chat': chat,
-        'messages': messages,
-        'form': form,
-    })
-    return render(request, "chat/chat.html", context)
+        context.update({
+            'Chat': chat,
+            'messages': messages,
+            'form': form,
+        })
+        return render(request, "chat/chat.html", context)
+    return redirect('chats')
+
+
+def askAdmin(request):
+    user = request.user
+    if user.is_authenticated:
+        if request.method == "POST":
+            form = SendMessageForm(request.POST)
+            if form.is_valid():
+                admin = Student.objects.filter(username='Admin').first()
+                veileder = Student.objects.filter(username='Veileder').first()
+                chat = Chat.objects.create()
+                chat.participents.set([admin, veileder, user])
+                pk = chat.id
+                send = form.save(commit=False)
+                send.from_user = user
+                send.to_chat = chat
+                send.message = form.cleaned_data['message']
+                send.save()
+                updateChats()
+            return redirect('advisorChat', pk)
+        form = SendMessageForm(request.POST)
+        context = {
+            'form': form,
+        }
+        send_fargetema(request, context)
+        return render(request, "chat/askAdmin.html", context)
+    return redirect('home')

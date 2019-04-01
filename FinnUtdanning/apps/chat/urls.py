@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^advisor/(?P<pk>[0-9]+)$', loadAdvisorChat, name='advisorChat'),
     url(r'^admin$', adminChatView, name='adminChats'),
     url(r'^admin/(?P<pk>[0-9]+)$', loadAdminChat, name='adminChat'),
+    url(r'^admin/ask$', askAdmin, name='askAdmin'),
 ]
