@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'apps.registration',
     'apps.studyadvisor',
-    'apps.chat'
+    'apps.chat',
     'whitenoise.runserver_nostatic',
 ]
 
