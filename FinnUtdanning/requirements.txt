@@ -4,3 +4,4 @@ pip==19.0.3
 Pillow==5.4.1
 gunicorn==19.9.0
 django-heroku==0.3.1
+whitenoise==4.1.2
