@@ -2,3 +2,5 @@ Django==2.0.4
 django-widget-tweaks==1.4.1
 pip==19.0.3
 Pillow==5.4.1
+gunicorn==19.9.0
+django-heroku==0.3.1
